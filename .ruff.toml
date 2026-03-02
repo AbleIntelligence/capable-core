@@ -1,0 +1,110 @@
+# Ruff configuration for CapAble Core Foundry
+# https://docs.astral.sh/ruff/configuration/
+
+# Target Python version
+target-version = "py311"
+
+# Max line length
+line-length = 150
+
+# Files to include/exclude
+extend-exclude = [
+    ".venv",
+    "__pycache__",
+    ".git",
+    ".adk",
+    "*.egg-info",
+]
+
+# =============================================================================
+# Linting
+# =============================================================================
+[lint]
+select = [
+    # --- Core quality ---
+    "F",      # Pyflakes (unused imports, undefined names, etc.)
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+
+    # --- Unused imports ---
+    "F401",   # Unused import (explicit, included via "F" but called out for clarity)
+
+    # --- Missing docstrings ---
+    "D100",   # Missing docstring in public module
+    "D101",   # Missing docstring in public class
+    "D102",   # Missing docstring in public method
+    "D103",   # Missing docstring in public function
+    "D104",   # Missing docstring in public package
+    "D107",   # Missing docstring in __init__
+
+    # --- Docstring style ---
+    "D200",   # No blank lines allowed after function docstring
+    "D201",   # No blank lines allowed before function docstring
+    "D202",   # No blank lines allowed after function docstring
+    "D205",   # 1 blank line required between summary line and description
+    "D210",   # No whitespaces allowed surrounding docstring text
+    "D400",   # First line should end with a period
+    "D401",   # First line of docstring should be in imperative mood
+
+    # --- Import sorting ---
+    "I",      # isort
+
+    # --- Formatting & style ---
+    "UP",     # pyupgrade (modern Python idioms)
+    "B",      # flake8-bugbear (common bugs and design problems)
+    "SIM",    # flake8-simplify (simplifiable code)
+    "RUF",    # Ruff-specific rules
+
+    # --- Type checking ---
+    "TCH",    # flake8-type-checking (move imports to TYPE_CHECKING block)
+    "ANN001", # Missing type annotation for function argument
+    "ANN201", # Missing return type annotation for public function
+
+    # --- Comprehensions ---
+    "C4",     # flake8-comprehensions (unnecessary list/dict/set calls)
+]
+
+ignore = [
+    # Allow missing docstrings in tests and private methods
+    "D100",   # Module docstrings — too noisy for every file
+    "D104",   # Package __init__ docstrings — not always needed
+
+    # Allow non-imperative docstring mood (Google style often uses descriptive)
+    "D401",
+
+    # Allow first line not ending with period (too strict for short docstrings)
+    "D400",
+]
+
+# Per-file ignores
+[lint.per-file-ignores]
+# Tests don't need docstrings or type annotations
+"tests/**/*.py" = ["D", "ANN"]
+"**/test_*.py" = ["D", "ANN"]
+"**/*_test.py" = ["D", "ANN"]
+
+# __init__.py can have unused imports (re-exports)
+"**/__init__.py" = ["F401"]
+
+# Config files are relaxed
+"capable_core/config.py" = ["D103"]
+"capable_core/run.py" = ["D103"]
+
+[lint.pydocstyle]
+convention = "google"
+
+[lint.isort]
+known-first-party = ["capable_core"]
+force-single-line = false
+combine-as-imports = true
+lines-after-imports = 2
+
+# =============================================================================
+# Formatting
+# =============================================================================
+[format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = true
