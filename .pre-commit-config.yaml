@@ -1,0 +1,77 @@
+# Pre-commit hooks for Able Foundry
+# Install: pip install pre-commit && pre-commit install
+# Run all: pre-commit run --all-files
+# Update:  pre-commit autoupdate
+
+
+repos:
+  # ---------------------------------------------------------------------------
+  # Ruff — fast linter + formatter (replaces flake8, isort, black, pyupgrade)
+  # ---------------------------------------------------------------------------
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.6
+    hooks:
+      # Linter — checks unused imports, missing docstrings, style issues
+      - id: ruff
+        name: ruff lint
+        args: [--fix, --exit-non-zero-on-fix]
+        types_or: [python, pyi]
+
+      # Formatter — enforces consistent formatting
+      - id: ruff-format
+        name: ruff format
+        types_or: [python, pyi]
+
+  # ---------------------------------------------------------------------------
+  # General file hygiene
+  # ---------------------------------------------------------------------------
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      # Prevent committing large files
+      - id: check-added-large-files
+        args: [--maxkb=500]
+
+      # Fix trailing whitespace
+      - id: trailing-whitespace
+
+      # Ensure files end with a newline
+      - id: end-of-file-fixer
+
+      # Validate YAML syntax
+      - id: check-yaml
+        args: [--unsafe]
+
+      # Validate JSON syntax
+      - id: check-json
+
+      # Validate TOML syntax
+      - id: check-toml
+
+      # Detect accidentally committed secrets / credentials
+      - id: detect-private-key
+
+      # Prevent merge conflict markers from being committed
+      - id: check-merge-conflict
+
+      # Check for broken symlinks
+      - id: check-symlinks
+
+      # Don't commit directly to main/master
+      - id: no-commit-to-branch
+        args: [--branch, main]
+
+  # ---------------------------------------------------------------------------
+  # Type checking (optional — runs mypy in lightweight mode)
+  # ---------------------------------------------------------------------------
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.14.1
+    hooks:
+      - id: mypy
+        name: mypy type check
+        args: [--ignore-missing-imports, --no-strict-optional]
+        additional_dependencies:
+          - types-requests
+          - types-PyYAML
+        # Only run on changed files for speed
+        pass_filenames: true

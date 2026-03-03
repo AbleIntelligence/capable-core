@@ -1,0 +1,17 @@
+.git
+.venv
+.mypy_cache
+.ruff_cache
+.pytest_cache
+.vscode
+__pycache__
+*.pyc
+*.pyo
+
+# Nested dirs inside the app that shouldn't be in the container
+capable_core/.venv
+capable_core/.adk
+capable_core/__pycache__
+capable_core/tests
+capable_core/.vscode
+capable_core/.github
